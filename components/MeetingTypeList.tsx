@@ -1,19 +1,37 @@
 'use client';
-import React, { useState } from 'react'; // Import useState
+import React, { useState } from 'react'; 
 import HomeCard from './HomeCard';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import MeetingModel from './MeetingModel';
+import { useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useUser } from "@clerk/nextjs";
 
 const MeetingTypeList = () => {
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const [meetingState, setMeetingState] = useState<
     'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
   >(); 
+  const { user } = useUser();
+  const client = useStreamVideoClient()
 
   const createMeeting = () => {
-    
+    if(!client || !user) return ;
+
+    try{
+      const id = crypto.randomUUID;
+      const call = client.call('default', id);
+
+      if(!call) throw new Error('Failed to create call')
+
+      if(!call) throw new Error ('Failed to create call')
+        
+        const startsAt = 
+    }
+    catch(error){
+      console.log(error);
+    }
   }
 
   return (

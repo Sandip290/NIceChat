@@ -29,7 +29,7 @@ const MeetingModel = ({ isOpen, onClose, title, className, children, handleClick
                         <Image src={image}  alt="image" width={72} height={72}/>
                     </div>
                 )}
-                <h1 className={cn('text-3xl font-bold leading-[42px]')}>
+                <h1 className={cn('text-3xl font-bold leading-[42px]',className)}>
                     {title} 
                 </h1>
                 {children}
@@ -38,7 +38,7 @@ const MeetingModel = ({ isOpen, onClose, title, className, children, handleClick
                     {buttonIcon && (
                         <Image src = {buttonIcon} alt="button icon" 
                         width={13} height={13}/>
-                    )} &nbsp
+                    )} &nbsp;
                     {buttonText || "Schedule Meeting"}
                 </Button>
             </div>
