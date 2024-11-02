@@ -5,14 +5,20 @@ import { useRouter } from 'next/navigation';
 import MeetingModel from './MeetingModel';
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
 import { useUser } from "@clerk/nextjs";
+import { Toast } from "@/components/ui/toaster";
+import { useToast } from '@/hooks/use-toast';
+
 
 const MeetingTypeList = () => {
 
+  
   const router = useRouter();
 
+  
   const [meetingState, setMeetingState] = useState<
     'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
   >(); 
+
   const { user } = useUser();
   const client = useStreamVideoClient()
   const [value, setvalue] = useState({
@@ -23,10 +29,19 @@ const MeetingTypeList = () => {
 
   const [callDetails, setCallDetails] = useState<Call>();
 
+  const { toast } = useToast();
+
   const createMeeting = async () => {
     if(!client || !user) return ;
 
     try{
+      if(!value.dateTime){
+        toast({
+          title: 'Please select date and time'
+        })
+        return;
+      }
+
       const id = crypto.randomUUID();
       const call = client.call('default', id);
 
@@ -51,9 +66,14 @@ const MeetingTypeList = () => {
         if(!value.description) {
           router.push(`/meeting/${call.id}`)
         }
+
+        toast({ title: "Meeting Created Successfully" })
     }
     catch(error){
       console.log(error);
+      toast({
+        title: "Failed to create meeting"
+      })
     }
   }
 
@@ -64,7 +84,7 @@ const MeetingTypeList = () => {
         img="/icons/add-meeting.svg"
         title="New Meeting"
         description="Start an instant meeting"
-        handleClick={() => setMeetingState('isJoiningMeeting') }
+        handleClick={() => setMeetingState('isInstantMeeting') }
         className="bg-orange-1"
       />
       <HomeCard 
@@ -78,7 +98,7 @@ const MeetingTypeList = () => {
       img="/icons/recordings.svg"
       title="View recording"
       description="Check your recordings"
-      handleClick={() => setMeetingState('isJoiningMeeting') }
+      handleClick={() => router.push('/recording') }
       className="bg-purple-1"
       />
       <HomeCard 
